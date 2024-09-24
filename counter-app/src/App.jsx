@@ -8,8 +8,20 @@ function App() {
 
   const addValue = () => {
     if (counter < 20) {
-      counter = counter + 1
-      setCounter(counter)
+      // L-8 Interview question
+      setCounter(counter + 1)
+      setCounter(counter + 1)
+      setCounter(counter + 1)
+      setCounter(counter + 1)
+      // The page is not loaded, after one changes, thus all values of counter are same
+      // The above code will reflect changes in UI coz "Setting state only changes its value for the next render."
+
+      // to fix this
+      setCounter(prevCounter => prevCounter + 1)
+      setCounter(prevCounter => prevCounter + 1)
+      setCounter(prevCounter => prevCounter + 1)
+      setCounter(prevCounter => prevCounter + 1)
+
       console.log("Clicked ", counter)
     } else {
       alert("Cannot add more than 20")
