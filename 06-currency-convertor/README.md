@@ -1,0 +1,1 @@
+- Best practice to import all components into a single file called `index.js` and export it.
