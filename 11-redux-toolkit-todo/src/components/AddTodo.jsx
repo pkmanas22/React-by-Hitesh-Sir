@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import {addTodo} from '../features/todo/todoSlice'
+import { addTodo, updateTodo } from '../features/todo/todoSlice'
 
 
-export default function AddTodo() {
-    const [input, setInput] = useState('');
+export default function AddTodo({ input, setInput, editId, clearEdit }) {
 
     const dispatch = useDispatch()
 
@@ -14,8 +13,13 @@ export default function AddTodo() {
             alert("Write the todo first")
             return
         }
-        dispatch(addTodo(input));
-        setInput('')
+        if (editId) {
+            dispatch(updateTodo({ id: editId, text: input }))
+            clearEdit()
+        } else {
+            dispatch(addTodo(input));
+            setInput('')
+        }
     }
 
     return (
@@ -31,7 +35,7 @@ export default function AddTodo() {
                 type="submit"
                 className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
             >
-                Add Todo
+                {editId ? 'Update Todo' : 'Add Todo'}
             </button>
         </form>
     )
