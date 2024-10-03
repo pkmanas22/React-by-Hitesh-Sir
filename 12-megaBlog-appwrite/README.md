@@ -1,0 +1,1 @@
+- For env variable in vite - https://vite.dev/guide/env-and-mode
