@@ -10,3 +10,7 @@
 
 ### L-20 Storage service
 - https://appwrite.io/docs/references/cloud/client-web/storage
+
+### L-21 Redux toolkit
+- https://redux-toolkit.js.org/tutorials/quick-start
+- Slice is used to check if user is authenticated or not
