@@ -14,3 +14,6 @@
 ### L-21 Redux toolkit
 - https://redux-toolkit.js.org/tutorials/quick-start
 - Slice is used to check if user is authenticated or not
+
+### L-24 (tinymce)
+- https://www.tiny.cloud/docs/tinymce/latest/react-cloud/
