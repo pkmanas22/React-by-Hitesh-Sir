@@ -1,5 +1,6 @@
 import React from 'react'
 import { Container, Logo } from '../index'
+import { useNavigate } from 'react-router-dom';
 
 export default function Footer() {
 
@@ -110,11 +111,13 @@ export default function Footer() {
         ],
     ];
 
+    const navigate = useNavigate();
+
     return (
         <Container>
             <div className=' p-4 grid grid-cols-1 md:grid-cols-2'>
                 <div className='md:w-[30%] text-center'>
-                    <Logo />
+                    <Logo className='cursor-pointer' clickable />
                     <div>
                         A Blog Post App
                     </div>
@@ -133,7 +136,7 @@ export default function Footer() {
                                 each.map((item, index) => (
                                     <li
                                         key={index}
-                                        onClick={() => { console.log("Footer items clicked") }}
+                                        onClick={() => { navigate(item.link) }}
                                         className={`text-left ${item.tag === 'h2' ? 'font-bold text-xl text-black' : 'text-gray-700 cursor-pointer hover:underline'}`}>
                                         {item.title}
                                     </li>

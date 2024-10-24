@@ -20,9 +20,9 @@ export default function Post() {
         } else navigate("/")
     }, [navigate, slug])
 
-    const userData = useSelector((state) => state.auth.status)
+    const userData = useSelector((state) => state.auth.userData)
 
-    const isAuthor = post && userData ? userData.$id === post.userId : false
+    const isAuthor = post && userData ? userData.$id === post?.userId : false
 
     const deletePost = async () => {
         const status = await postService.deletePost(post.$id)
@@ -31,6 +31,7 @@ export default function Post() {
             navigate("/")
         }
     }
+                    
 
     return post ? (
         <div className="py-8">

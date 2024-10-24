@@ -80,8 +80,9 @@ export class PostService {
         }
     }
 
-    async getAllPosts(queries = [Query.equal("status", "active")]) {
+    async getAllPosts() {
         try {
+            const queries = [Query.equal("status", "Active")]
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
@@ -89,6 +90,36 @@ export class PostService {
             )
         } catch (error) {
             console.log("Appwrite post service :: getAllPosts :: error ", error)
+            return null
+        }
+    }
+
+    async getMyPosts(userId) {
+        try {
+            const queries = [Query.equal('userId', userId)]
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+                queries
+            )
+        } catch (error) {
+            console.log("Appwrite post service :: getMyPosts :: error ", error)
+            return null
+        }
+    }
+
+    async generateAllSlugs() {
+        try {
+            const allPosts = await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionId,
+            )
+
+            const allSlugs = allPosts.documents.map((post) => post.$id)
+
+            return allSlugs;
+        } catch (error) {
+            console.log("Appwrite post service :: generateAllSlugs :: error ", error)
             return null
         }
     }

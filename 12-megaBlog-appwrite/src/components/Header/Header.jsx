@@ -46,7 +46,7 @@ export default function Header() {
     return (
         <Container>
             <div className='flex justify-between items-center'>
-                <Logo className='text-blue-800 text-4xl p-3' />
+                <Logo className='text-blue-800 text-4xl p-3 cursor-pointer' clickable />
                 <ul className='flex gap-2 mr-5 items-center'>
                     {navItems.map((item, index) => (
                         item.active && <li key={index}>

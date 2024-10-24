@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import authService from '../appwrite/auth';
 import { useDispatch } from 'react-redux';
 import { login as storeLogin } from '../store/authSlice'
@@ -7,13 +7,13 @@ import { Input, Logo, Button } from './index'
 import { useForm } from 'react-hook-form';
 
 export default function Signup() {
-    const [error, setError] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, setError, formState: { errors } } = useForm()
 
-    async function signupFn({ data }) {
-        setError("")
+
+    async function signupFn(data) {
+        setError(null)
         try {
             const response = await authService.createUser(data);
             if (response) {
@@ -22,11 +22,13 @@ export default function Signup() {
                 navigate("/")
             }
         } catch (error) {
-            console.log("Login Component Error :: loginFn :: error ", error);
-            setError(error.message)
+            console.log("Signup Component Error :: signupFn :: error ", error.message);
+            setError('root.serverError', {
+                message: error.message
+            })
         }
     }
-    
+
     return (
         <div className="flex items-center justify-center">
             <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
@@ -45,7 +47,8 @@ export default function Signup() {
                         Sign In
                     </Link>
                 </p>
-                {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+                
+                {errors.root && <p className="text-red-600 mt-8 text-center">{errors.root.serverError.message}</p>}
 
                 <form onSubmit={handleSubmit(signupFn)} >
                     <div className='space-y-5'>
@@ -53,16 +56,22 @@ export default function Signup() {
                             label="Full Name"
                             placeholder="John Doe"
                             type="text"
+                            errorMsg={errors.name?.message}
                             {...register("name", {
-                                required: true,
+                                required: "Full name is required",
+                                maxLength: {
+                                    value: 20,
+                                    message: "Full name cannot exceed more than 20 letters"
+                                }
                             })}
                         />
                         <Input
                             label="Email"
-                            type="email"
+                            type="text"
                             placeholder="example@gmail.com"
+                            errorMsg={errors.email?.message}
                             {...register("email", {
-                                required: true,
+                                required: "Email is required",
                                 validate: {
                                     matchPattern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || "Email must be a valid address"
                                 }
@@ -72,10 +81,19 @@ export default function Signup() {
                             label="Password"
                             type="password"
                             placeholder="password..."
+                            errorMsg={errors.password?.message}
                             {...register("password", {
-                                required: true,
+                                required: "Password is required",
+                                maxLength: {
+                                    value: 32,
+                                    message: "Password cannot exceed 32 letters"
+                                },
+                                minLength: {
+                                    value: 8,
+                                    message: "Password should be at least 8 characters"
+                                },
                                 validate: {
-                                    matchPattern: (value) => /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})/.test(value) || "Password should be of minimum 8 characters and must contain at least one lower case , one uppercase, one numeric and special character"
+                                    matchPattern: (value) => /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,32})/.test(value) || "Password must contain at least one lower case , one uppercase, one numeric and special character"
                                 }
                             })}
                         />

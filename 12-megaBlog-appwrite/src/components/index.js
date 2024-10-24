@@ -11,6 +11,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import RTE from "./RTE";
 import PostForm from "./Post-form/PostForm";
+import NotFound from "./NotFound";
 
 export {
     Footer,
@@ -26,4 +27,5 @@ export {
     Signup,
     RTE,
     PostForm,
+    NotFound,
 }

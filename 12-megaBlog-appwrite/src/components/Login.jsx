@@ -7,13 +7,12 @@ import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form'
 
 export default function Login() {
-    const [error, setError] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, setError, formState: { errors } } = useForm();
 
     const loginFn = async (data) => {
-        setError("");
+        setError(null);
         try {
             const session = await authService.login(data);
             if (session) {
@@ -22,10 +21,14 @@ export default function Login() {
                 navigate('/');
             }
         } catch (error) {
-            console.log("Login Component Error :: loginFn :: error ", error);
-            setError(error.message) 
+            console.log("Login Component Error :: loginFn :: error ", error.message);
+            setError('root.serverError', {
+                message: error.message
+            })
         }
     }
+
+    console.log(errors)
 
     return (
         <div
@@ -47,15 +50,18 @@ export default function Login() {
                         Sign Up
                     </Link>
                 </p>
-                {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+
+                {errors.root && <p className="text-red-600 mt-8 text-center">{errors.root.serverError.message}</p>}
+
                 <form onSubmit={handleSubmit(loginFn)} className='mt-8'>
                     <div className='space-y-5'>
                         <Input
                             label="Email"
                             placeholder="example@gmail.com"
-                            type="email"
+                            type="text"
+                            errorMsg={errors.email?.message}
                             {...register("email", {
-                                required: true,
+                                required: "Email is required",
                                 validate: {
                                     matchPattern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || "Email must be a valid address"
                                 }
@@ -65,10 +71,19 @@ export default function Login() {
                             label="Password"
                             type="password"
                             placeholder="password..."
+                            errorMsg={errors.password?.message}
                             {...register("password", {
-                                required: true,
+                                required: "Oops... ! Password is required",
+                                maxLength: {
+                                    value: 32,
+                                    message: "Password cannot exceed 32 letters"
+                                },
+                                minLength: {
+                                    value: 8,
+                                    message: "Password should be at least 8 characters"
+                                },
                                 validate: {
-                                    matchPattern: (value) => /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})/.test(value) || "Password should be of minimum 8 characters and must contain at least one lower case , one uppercase, one numeric and special character"
+                                    matchPattern: (value) => /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,32})/.test(value) || "Password must contain at least one lower case , one uppercase, one numeric and special character"
                                 }
                             })}
                         />
