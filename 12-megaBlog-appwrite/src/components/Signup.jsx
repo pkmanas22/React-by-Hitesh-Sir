@@ -30,24 +30,21 @@ export default function Signup() {
     }
 
     return (
-        <div className="flex items-center justify-center">
-            <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
-                <div className="mb-2 flex justify-center">
-                    <span className="inline-block w-full max-w-[100px]">
-                        <Logo width="100%" />
-                    </span>
+        <div className="flex items-center justify-center mx-auto md:w-full">
+            <div className={`mx-auto  max-w-lg w-full bg-gray-100 rounded-xl p-10 border border-black/10`}>
+                <div className="text-center space-y-2 mb-3">
+                    <h2 className="text-center text-2xl md:text-4xl font-bold leading-tight">Create an account</h2>
+                    <div className="text-lg font-semibold">
+                        Already have an account?&nbsp;
+                        <span onClick={() => {
+                            navigate("/login")
+                        }}
+                            className="italic underline hover:text-blue-700 cursor-pointer mx-1 text-xl text-gray-700">
+                            Login
+                        </span>
+                    </div>
                 </div>
-                <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create account</h2>
-                <p className="mt-2 text-center text-base text-black/60">
-                    Already have an account?&nbsp;
-                    <Link
-                        to="/login"
-                        className="font-medium text-primary transition-all duration-200 hover:underline"
-                    >
-                        Sign In
-                    </Link>
-                </p>
-                
+
                 {errors.root && <p className="text-red-600 mt-8 text-center">{errors.root.serverError.message}</p>}
 
                 <form onSubmit={handleSubmit(signupFn)} >
@@ -97,7 +94,7 @@ export default function Signup() {
                                 }
                             })}
                         />
-                        <Button type='submit' className='w-full'>Submit</Button>
+                        <Button type='submit' className='w-full font-bold text-xl hover:bg-pink-100'>Submit</Button>
                     </div>
                 </form>
             </div>

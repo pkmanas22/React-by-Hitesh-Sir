@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import fileService from '../../appwrite/fileService';
 import postService from '../../appwrite/postService'
 import { useCallback, useEffect, useState } from 'react';
-import { Input, Button, RTE, Select } from '../index'
+import { Input, Button, RTE, Select, Container } from '../index'
 import conf from '../../conf/conf';
 import { DevTool } from "@hookform/devtools";
 
@@ -23,7 +23,7 @@ export default function PostForm({ post }) {
     const userData = useSelector((state) => state.auth.userData)
     const [tinyMCEApiKey,] = useState(conf.tinyMCEApiKey || undefined)
     const [slugEdit, setSlugEdit] = useState(false)
-    const [previewImage, setPreviewImage] = useState('')
+    const [previewImage, setPreviewImage] = useState(post && fileService.getFilePreview(post?.featuredImage))
     const [loadingSubmission, setLoadingSubmission] = useState(false)
     const [slugs, setSlugs] = useState([])
 
@@ -31,49 +31,69 @@ export default function PostForm({ post }) {
         console.log("submission clicked")
         setLoadingSubmission(true)
 
-        if (post) {
-            const file = data?.image[0] ? await fileService.uploadFile(data?.image[0]) : null;
-
-            if (file) {
-                fileService.deleteFile(post.featuredImage)
-            }
-
-            const dbPost = await postService.updatePost(post.$id, {
-                ...data,
-                featuredImage: file ? file.$id : undefined
-            })
-
-            if (dbPost) {
-                navigate(`/post/${dbPost.$id}`)
-            }
-        } else {
-            const file = data?.image[0] ? await fileService.uploadFile(data?.image[0]) : null;
-
-            if (file) {
-                const dbPost = await postService.createPost({
+        try {
+            if (post) {
+                const file = data?.image[0] ? await fileService.uploadFile(data?.image[0]) : null;
+    
+                if (file) {
+                    fileService.deleteFile(post.featuredImage)
+                }
+    
+                const dbPost = await postService.updatePost(post.$id, {
                     ...data,
-                    featuredImage: file.$id,
-                    userId: userData.$id
+                    featuredImage: file ? file.$id : undefined
                 })
-
+    
                 if (dbPost) {
                     navigate(`/post/${dbPost.$id}`)
                 }
             } else {
-                console.log("required")
+                const file = data?.image[0] ? await fileService.uploadFile(data?.image[0]) : null;
+    
+                if (file) {
+                    const dbPost = await postService.createPost({
+                        ...data,
+                        featuredImage: file.$id,
+                        userId: userData.$id
+                    })
+    
+                    if (dbPost) {
+                        navigate(`/post/${dbPost.$id}`)
+                    }
+                } else {
+                    console.log("required")
+                }
             }
+        } catch (error) {
+            console.log("error occurred")
+            setError('root', {
+                message: error.message,
+                type: 'manual'
+            })
         }
         setLoadingSubmission(false)
     }
 
     const slugTransform = useCallback((value) => {
         if (value && typeof value === 'string') {
-            return value
+            // Create slug by keeping only valid characters (letters, numbers, period, hyphen, underscore)
+            let slug = value
                 .toLowerCase()
-                .replace(/[^a-zA-Z\d]+/g, "-")
+                .replace(/[^a-zA-Z\d._-]+/g, "-") // Remove any invalid characters
+    
+            // Ensure the slug is no more than 36 characters
+            slug = slug.substring(0, 36);
+    
+            // Ensure it doesn’t start with a period, hyphen, or underscore
+            if (/^[._-]/.test(slug)) {
+                slug = slug.replace(/^[._-]+/, "");
+            }
+    
+            return slug;
         }
         return "";
-    }, [])
+    }, []);
+    
 
     useEffect(() => {
         const subscription = watch((value, { name }) => {
@@ -94,7 +114,7 @@ export default function PostForm({ post }) {
 
                 if (isExist) {
                     console.log(`${currentSlug} is already taken`)
-                    
+
                     setError('slug', {
                         type: 'manual',
                         message: `${currentSlug} is already taken`
@@ -113,96 +133,98 @@ export default function PostForm({ post }) {
         })
     }, [])
 
+
     return (
-        <form onSubmit={handleSubmit(submitFn)} className="flex flex-wrap">
-            <div className="w-2/3 px-2">
-                <Input
-                    label='Title: '
-                    className='mb-4'
-                    placeHolder='Title'
-                    errorMsg={errors.title?.message}
-                    {...register("title", { required: "Title required" })}
-                />
+        <form onSubmit={handleSubmit(submitFn)} className="flex flex-wrap p-5">
+            {errors.root?.message && <p className="text-red-600 my-1">{errors.root?.message}</p>}
+            <div className="md:w-2/3 px-2 space-y-4">
+                <Container>
+                    <Input
+                        label='Title: '
+                        className='mb-4'
+                        placeHolder='Title'
+                        errorMsg={errors.title?.message}
+                        {...register("title", { required: "Title required" })}
+                    />
 
-                <Input
-                    label='Slug: '
-                    className='mb-4'
-                    placeHolder='Slug'
-                    errorMsg={errors.slug?.message}
-                    disabled={!slugEdit}
-                    {...register("slug", {
-                        required: "Slug must be present",
-                    })}
-                    onInput={(e) => {
-                        setValue("slug", slugTransform(e.currentTarget.value), {
-                            shouldValidate: true
-                        })
-                    }}
-                />
+                    <Input
+                        label='Slug: '
+                        className={`mb-4 ${!slugEdit && 'bg-slate-100'}`}
+                        placeHolder='Slug'
+                        errorMsg={errors.slug?.message}
+                        disabled={!slugEdit}
+                        {...register("slug", {
+                            required: "Slug must be present",
+                        })}
+                        onInput={(e) => {
+                            setValue("slug", slugTransform(e.currentTarget.value), {
+                                shouldValidate: true
+                            })
+                        }}
+                    />
 
-                <Input
-                    label="Wanna to change slug"
-                    type="checkbox"
-                    checked={slugEdit}
-                    onChange={() => setSlugEdit(prev => !prev)}
-                />
+                    <div className='my-2 flex items-center'>
+                        <label className='mr-2 font-semibold text-' htmlFor='edit'>
+                            Wanna to change slug
+                        </label>
+                        <input type="checkbox" id='edit' checked={slugEdit}
+                            onChange={() => setSlugEdit(prev => !prev)} />
+                    </div>
+                </Container>
 
-
-                {tinyMCEApiKey ? <RTE
-                    apiKey={tinyMCEApiKey}
-                    label="Content: "
-                    name="content"
-                    control={control}
-                    defaultValue={getValues("content")}
-                /> : <div>Loading</div>}
-                {errors.content?.message && <p className="text-red-600 my-1">{errors.content?.message}</p>}
+                <Container>
+                    {errors.content?.message && <p className="text-red-600 my-1">{errors.content?.message}</p>}
+                    {tinyMCEApiKey ? <RTE
+                        apiKey={tinyMCEApiKey}
+                        label="Content: "
+                        name="content"
+                        control={control}
+                        defaultValue={getValues("content")}
+                    /> : <div>Loading</div>}
+                </Container>
 
             </div>
-            <div className="w-1/3 px-2">
-                <Input
-                    label='Featured Image: '
-                    className='mb-4'
-                    type="file"
-                    errorMsg={errors.image?.message}
-                    accept="image/png, image/jpeg, image/jpg, image/gif"
-                    {...register("image", {
-                        required: {
-                            value: !post,
-                            message: "Image is required"
-                        }
-                    })}
-                />
-                {previewImage && (
-                    <div className="w-full mb-4">
-                        <img
-                            src={previewImage}
-                            className="rounded-lg"
-                        />
-                    </div>
-                )}
-                {post && (
-                    <div className="w-full mb-4">
-                        <img
-                            src={fileService.getFilePreview(post.featuredImage)}
-                            alt={post.title}
-                            className="rounded-lg"
-                        />
-                    </div>
-                )}
-                <Select
-                    options={["Active", "Inactive",]}
-                    label="Status"
-                    className="mb-4"
-                    {...register("status", { required: true })}
-                />
-                <Button
-                    type="submit"
-                    bgColor={post ? "bg-green-500" : undefined}
-                    className={`w-full ${loadingSubmission && 'cursor-progress opacity-5'}`}
-                    disabled={loadingSubmission}
-                >
-                    {post ? "Update" : "Submit"}
-                </Button>
+            <div className="md:w-1/3 px-2 space-y-4">
+                <Container>
+                    <Input
+                        label='Featured Image: '
+                        className='mb-4'
+                        type="file"
+                        errorMsg={errors.image?.message}
+                        accept="image/png, image/jpeg, image/jpg, image/gif"
+                        {...register("image", {
+                            required: {
+                                value: !post,
+                                message: "Image is required"
+                            }
+                        })}
+                    />
+                    {previewImage && (
+                        <div className="w-full mb-4">
+                            <img
+                                src={previewImage}
+                                className="rounded-lg"
+                                alt='Featured Image'
+                            />
+                        </div>
+                    )}
+                </Container>
+                <Container>
+                    <Select
+                        options={["Active", "Inactive",]}
+                        label="Status"
+                        className="mb-4"
+                        {...register("status", { required: true })}
+                    />
+                    <Button
+                        type="submit"
+                        bgColor={post ? "bg-green-500" : undefined}
+                        className={`w-full bg-green-100 hover:bg-lime-200 transition ${loadingSubmission && 'cursor-progress opacity-[0.7] text-black'}`}
+                        disabled={loadingSubmission}
+                    >
+                        {post ? "Update" : "Submit"}
+                    </Button>
+                </Container>
             </div>
             <DevTool control={control} /> {/* set up the dev tool */}
         </form>

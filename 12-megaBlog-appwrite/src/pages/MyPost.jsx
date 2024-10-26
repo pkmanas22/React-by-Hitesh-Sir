@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import postService from '../appwrite/postService';
-import { Container, PostCard } from '../components'
+import { Container, PostCard, PostContainer } from '../components'
 
 export default function MyPost() {
     const [posts, setPosts] = useState([]);
@@ -20,13 +20,7 @@ export default function MyPost() {
         <div className='w-full py-8'>
             <Container>
                 <div className='flex flex-wrap'>
-                    {
-                        posts.map((post) => (
-                            <div key={post.$id} className='p-2 w-1/4'>
-                                <PostCard {...post} />
-                            </div>
-                        ))
-                    }
+                    <PostContainer posts={posts} />
                 </div>
             </Container>
         </div>

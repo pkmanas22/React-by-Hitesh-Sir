@@ -22,7 +22,7 @@ export class FileService {
             )
         } catch (error) {
             console.log("Appwrite file service :: uploadFile :: error ", error)
-            return null
+            return error;
         }
     }
 

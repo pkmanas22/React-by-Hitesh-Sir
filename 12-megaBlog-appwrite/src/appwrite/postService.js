@@ -30,7 +30,7 @@ export class PostService {
             )
         } catch (error) {
             console.log("Appwrite post service :: createPost :: error ", error)
-            return null;
+            return error;
         }
     }
 
@@ -49,7 +49,7 @@ export class PostService {
             )
         } catch (error) {
             console.log("Appwrite post service :: updatePost :: error ", error)
-            return null;
+            return error;
         }
     }
 
@@ -76,7 +76,7 @@ export class PostService {
             )
         } catch (error) {
             console.log("Appwrite post service :: getPost :: error ", error)
-            return null
+            return error
         }
     }
 
@@ -90,7 +90,7 @@ export class PostService {
             )
         } catch (error) {
             console.log("Appwrite post service :: getAllPosts :: error ", error)
-            return null
+            return error
         }
     }
 
@@ -104,7 +104,7 @@ export class PostService {
             )
         } catch (error) {
             console.log("Appwrite post service :: getMyPosts :: error ", error)
-            return null
+            return error
         }
     }
 
@@ -120,7 +120,7 @@ export class PostService {
             return allSlugs;
         } catch (error) {
             console.log("Appwrite post service :: generateAllSlugs :: error ", error)
-            return null
+            return error
         }
     }
 }

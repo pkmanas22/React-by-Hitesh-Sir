@@ -1,20 +1,31 @@
 import { useState, useEffect } from 'react'
 import postService from '../appwrite/postService';
-import { Container, PostCard } from '../components'
+import { Button, Container, LandingPage, PostCard, PostContainer } from '../components'
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function Home() {
     const [posts, setPosts] = useState([]);
 
+    const authStatus = useSelector((state) => state.auth.status);
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         postService.getAllPosts().then((posts) => {
             if (posts) {
-                console.log(posts.documents)
                 setPosts(posts.documents)
+                setLoading(false)
             }
         })
-        console.log(posts)
     }, [])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
+    if (!authStatus) {
+        return <LandingPage />
+    }
 
     if (posts.length === 0) {
         return (
@@ -39,11 +50,7 @@ export default function Home() {
         <div className='w-full py-8'>
             <Container>
                 <div className='flex flex-wrap'>
-                    {posts.map((post) => (
-                        <div key={post.$id} className='p-2 w-1/4'>
-                            <PostCard {...post} />
-                        </div>
-                    ))}
+                    <PostContainer posts={posts}/>
                 </div>
             </Container>
         </div>

@@ -11,7 +11,7 @@ function Select({
 
     return (
         <div>
-            {label && <label htmlFor={id}>{label}</label>}
+            {label && <label htmlFor={id} className='inline-block mr-2 font-semibold'>{label}</label>}
             <select
                 ref={ref}
                 id={id}
