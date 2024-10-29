@@ -94,7 +94,7 @@ export default function Signup() {
                                 }
                             })}
                         />
-                        <Button type='submit' className='w-full font-bold text-xl hover:bg-pink-100'>Submit</Button>
+                        <Button type='submit' className='bg-green-200 w-full font-bold text-xl hover:bg-pink-100'>Submit</Button>
                     </div>
                 </form>
             </div>

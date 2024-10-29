@@ -30,7 +30,10 @@ export class PostService {
             )
         } catch (error) {
             console.log("Appwrite post service :: createPost :: error ", error)
-            return error;
+            return {
+                status: 500,
+                errMsg: error.message
+            };
         }
     }
 

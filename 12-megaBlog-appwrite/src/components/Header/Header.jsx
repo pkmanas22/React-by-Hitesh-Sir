@@ -1,7 +1,7 @@
 import { Container, Logo } from '..'
 import { useDispatch, useSelector } from 'react-redux'
 import authService from '../../appwrite/auth';
-import { logout } from '../../store/authSlice';
+import { authSlice, logout } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
@@ -13,6 +13,9 @@ export default function Header() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const dropdownRef = useRef(null);
+
+    const user = useSelector((state) => state.auth.userData)
+    console.log(user)
 
     const navItems = [
         {
@@ -88,7 +91,8 @@ export default function Header() {
                     </button>
 
                     <Logo className='cursor-pointer text-blue-700' clickable />
-                    <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    {user && <div className="flex justify-between items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                        <span className='italic mr-3 hidden sm:flex'>Welcome, {user?.name.split(' ')[0]}</span>
                         {/* User menu button */}
                         <button
                             type="button"
@@ -97,7 +101,7 @@ export default function Header() {
                         >
                             <span className="sr-only">Open user menu</span>
                             <div className="w-8 h-8 text-white text-lg font-semibold flex justify-center items-center rounded-full">
-                                J
+                                {user?.name.charAt(0).toUpperCase()}
                             </div>
                         </button>
 
@@ -105,16 +109,17 @@ export default function Header() {
                         {isDropdownOpen && (
                             <div ref={dropdownRef} className="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow absolute top-16 right-4">
                                 <div className="px-4 py-3">
-                                    <span className="block text-sm text-gray-900">John Doe</span>
+                                    <span className="block text-sm text-gray-900">{user?.name}</span>
+                                    <span className='text-sm text-gray-700'>{user?.email}</span>
                                 </div>
                                 <ul className="py-2">
-                                    <li><a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a></li>
-                                    <li><a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a></li>
+                                    {/* <li><a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a></li>
+                                    <li><a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a></li> */}
                                     <li><a onClick={logoutHandler} className="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a></li>
                                 </ul>
                             </div>
                         )}
-                    </div>
+                    </div>}
 
                     {/* Navbar links */}
                     <div className={`items-center justify-between ${isMenuOpen ? 'block' : 'hidden'} w-full md:flex md:w-auto md:order-1`}>
