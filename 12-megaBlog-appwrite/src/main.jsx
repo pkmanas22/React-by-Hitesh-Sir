@@ -7,6 +7,8 @@ import store from './store/store.js'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AddPost, EditPost, Home, Login, MyPost, NotFound, Post, Signup } from './pages/'
 import AuthLayout from './components/AuthLayout.jsx'
+import { Provider as ChakraProvider } from './components/UI/provider.jsx'
+
 
 const router = createBrowserRouter([
   {
@@ -68,8 +70,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Provider store={store} >
-      <RouterProvider router={router} />
-    </Provider>
+    <ChakraProvider>
+      <Provider store={store} >
+        <RouterProvider router={router} />
+      </Provider>
+    </ChakraProvider>
   </StrictMode>,
 )
