@@ -1,5 +1,5 @@
 import React from 'react'
-import Button from '../UI/Button';
+import Button from '../my-UI/Button';
 import { Link } from 'react-router-dom';
 import fileService from '../../appwrite/fileService';
 
@@ -20,17 +20,17 @@ export default function PostPageView({ post, isAuthor, onDelete }) {
                 <p className="text-gray-600 mb-6">{content}</p>
 
                 {isAuthor && (
-                        <div className="absolute right-6 top-6 flex space-x-2">
-                            <Link to={`/edit-post/${$id}`}>
-                                <Button>
-                                    Edit
-                                </Button>
-                            </Link>
-                            <Button onClick={onDelete}>
-                                Delete
+                    <div className="absolute right-6 top-6 flex space-x-2">
+                        <Link to={`/edit-post/${$id}`}>
+                            <Button>
+                                Edit
                             </Button>
-                        </div>
-                    )}
+                        </Link>
+                        <Button onClick={onDelete}>
+                            Delete
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     );
