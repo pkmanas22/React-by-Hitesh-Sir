@@ -6,6 +6,7 @@ import MyPost from "./MyPost";
 import NotFound from "./NotFound";
 import Post from "./Post";
 import Signup from "./Signup";
+import Verification from "./Verification";
 
 export {
     AddPost,
@@ -16,4 +17,5 @@ export {
     Signup,
     NotFound,
     MyPost,
+    Verification,
 }

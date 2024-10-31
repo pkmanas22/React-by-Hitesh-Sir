@@ -1,31 +1,32 @@
-import React, { useEffect, useState } from 'react'
 import authService from '../appwrite/auth';
-import { useDispatch } from 'react-redux';
-import { login as storeLogin } from '../store/authSlice'
-import { useNavigate, Link } from 'react-router-dom';
-import { Input, Logo, Button } from './index'
+import { useNavigate } from 'react-router-dom';
+import { Input, Button } from './index'
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 export default function Signup() {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { register, handleSubmit, setError, formState: { errors } } = useForm()
+    const [btnClicked, setBtnClicked] = useState(false);
 
 
     async function signupFn(data) {
         setError(null)
+        setBtnClicked(true)
+        
         try {
-            const response = await authService.createUser(data);
-            if (response) {
-                const userData = await authService.getCurrentUser();
-                if (userData) dispatch(storeLogin(userData))
-                navigate("/")
+            const token = await authService.createUser(data);
+            if(token.userId) {
+                navigate(`/verification?uq=${token.$id}&$createdAt=${token.$createdAt}&num=${Math.floor(Math.random())}&email=${data.email}&data=${token.userId}&exp=${token.expire}`)
             }
+
         } catch (error) {
             console.log("Signup Component Error :: signupFn :: error ", error.message);
             setError('root.serverError', {
                 message: error.message
             })
+        } finally {
+            setBtnClicked(false)
         }
     }
 
@@ -94,7 +95,7 @@ export default function Signup() {
                                 }
                             })}
                         />
-                        <Button type='submit' className='bg-green-200 w-full font-bold text-xl hover:bg-pink-100'>Submit</Button>
+                        <Button type='submit' className={`bg-green-200 w-full font-bold text-xl hover:bg-pink-100 ${btnClicked && 'cursor-progress'}`}>Send OTP</Button>
                     </div>
                 </form>
             </div>

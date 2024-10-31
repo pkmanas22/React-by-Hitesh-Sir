@@ -17,6 +17,7 @@ import BlockquoteComponent from "./my-UI/BlockquoteComponent";
 import PostNotFound from "./Error/PostNotFound";
 import PostContainer from "./Container/PostContainer";
 import PostPageView from "./Post-form/PostPageView";
+import OtpVerify from "./OtpVerify";
 
 export {
     Footer,
@@ -38,4 +39,5 @@ export {
     PostNotFound,
     PostContainer,
     PostPageView,
+    OtpVerify,
 }

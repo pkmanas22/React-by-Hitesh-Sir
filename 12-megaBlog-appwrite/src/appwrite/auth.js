@@ -18,12 +18,38 @@ export class AuthService {
             const userAccount = await this.account.create(ID.unique(), email, password, name)
             if (userAccount) {
                 // Call another method
-                this.login({ email, password })
-            } else {
-                return userAccount;
-            }
+                // this.login({ email, password })
+                const token = await this.generateEmailOtp(userAccount.$id, userAccount.email);
+                return token;
+            } 
         } catch (error) {
             console.log("Appwrite service :: createUser :: error ", error)
+            throw error
+        }
+    }
+
+    async generateEmailOtp(userId, email) {
+        try {
+            const token =  await this.account.createEmailToken(
+                userId,
+                email,
+                false
+            )
+            return token;
+        } catch (error) {
+            console.log("Appwrite service :: generateEmailOtp :: error ", error)
+            throw error
+        }
+    }
+
+    async createSessionOtp({ userId, otp }) {
+        try {
+            return await this.account.createSession(
+                userId,
+                otp
+            )
+        } catch (error) {
+            console.log("Appwrite service :: createSessionOtp :: error ", error)
             throw error
         }
     }
