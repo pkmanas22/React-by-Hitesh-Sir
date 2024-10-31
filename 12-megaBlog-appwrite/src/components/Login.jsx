@@ -21,14 +21,14 @@ export default function Login() {
                 navigate('/');
             }
         } catch (error) {
-            console.log("Login Component Error :: loginFn :: error ", error.message);
+            // console.log("Login Component Error :: loginFn :: error ", error.message);
             setError('root.serverError', {
                 message: error.message
             })
         }
     }
 
-    console.log(errors)
+    // console.log(errors)
 
     return (
         <div className='flex items-center justify-center m-auto md:w-full'>

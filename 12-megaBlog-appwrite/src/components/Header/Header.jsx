@@ -1,21 +1,22 @@
 import { Container, Logo } from '..'
 import { useDispatch, useSelector } from 'react-redux'
 import authService from '../../appwrite/auth';
-import { authSlice, logout } from '../../store/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { logout } from '../../store/authSlice';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
     const authStatus = useSelector((state) => state.auth.status)        // there is auth in store's reducer and it has status
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const navigate = useNavigate();
 
     const user = useSelector((state) => state.auth.userData)
-    console.log(user)
+
+    // console.log(user)
 
     const navItems = [
         {
@@ -48,6 +49,7 @@ export default function Header() {
     function logoutHandler() {
         authService.logout().then(() => {
             dispatch(logout())
+            navigate('/login')
         })
     }
 
@@ -126,7 +128,7 @@ export default function Header() {
                         <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-slate-200 md:space-x-6 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-slate-100">
                             {navItems.map((item) => (
                                 item.active && <li key={item.slug}>
-                                    <a href={item.slug} className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-300 md:hover:bg-transparent md:hover:text-blue-700 md:hover:bg-yellow-300 border md:px-3 md:py-1">{item.name}</a>
+                                    <a href={item.slug} className="block py-2 px-3 text-gray-900 rounded-md hover:bg-gray-300 md:hover:bg-transparent md:hover:text-blue-700 md:hover:bg-pink-200 border md:px-3 md:py-1">{item.name}</a>
                                 </li>
                             ))}
                         </ul>

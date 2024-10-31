@@ -14,7 +14,7 @@ export default function Post() {
 
     useEffect(() => {
         if (slug) {
-            console.log(slug)
+            // console.log(slug)
             postService.getPost(slug)
                 .then((post) => {
                     setLoading(false);
@@ -27,12 +27,17 @@ export default function Post() {
 
     const userData = useSelector((state) => state.auth.userData)
 
+    if (!userData) {
+        navigate("/")
+    }
+
     const isAuthor = post && userData ? userData.$id === post?.userId : false
 
     const deletePost = async () => {
         const status = await postService.deletePost(post.$id)
         if (status) {
             fileService.deleteFile(post.featuredImage)
+            alert("Post deleted successfully")
             navigate("/")
         }
     }

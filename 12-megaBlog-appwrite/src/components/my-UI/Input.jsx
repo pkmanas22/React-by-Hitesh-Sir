@@ -16,8 +16,6 @@ const Input = forwardRef(function Input({
         setShow((prev) => !prev)
     }
 
-    errorMsg && console.log("Inside Input Component: " + errorMsg) // here it works perfectly
-
     const inputType = (type === "password") && show ? 'text' : type
 
     return (

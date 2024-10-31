@@ -11,7 +11,7 @@ export default function BlockquoteComponent() {
             </div>
             <div className="mt-4 flex items-center text-center divide-x-2 rtl:divide-x-reverse divide-gray-500 ">
                 <cite className="text-gray-900 pe-3 font-bold md:text-xl">Mr. Manas Pradhan</cite>
-                <cite className="ps-3 text-sm md:text-lg text-gray-500">CEO at Post Pallete</cite>
+                <cite className="ps-3 text-sm md:text-lg text-gray-500">CEO at Post Palette</cite>
             </div>
         </>
     )

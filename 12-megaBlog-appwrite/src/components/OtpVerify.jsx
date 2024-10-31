@@ -34,13 +34,13 @@ export default function OtpVerify() {
                     otp,
                 })
                 if (response.$id) {
-                    console.log("response")
+                    // console.log("response")
                     const userData = await authService.getCurrentUser();
                     if (userData) dispatch(storeLogin(userData));
                     navigate('/');
                 }
             } catch (error) {
-                console.log("OtpVerify Component Error :: handleOtpSubmitFn :: error ", error.message);
+                // console.log("OtpVerify Component Error :: handleOtpSubmitFn :: error ", error.message);
                 await alert("Sorry something happened at this moment, please signup again");
                 navigate('/signup');
             }

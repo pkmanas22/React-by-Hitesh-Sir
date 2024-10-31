@@ -21,7 +21,7 @@ export class FileService {
                 file
             )
         } catch (error) {
-            console.log("Appwrite file service :: uploadFile :: error ", error)
+            // console.log("Appwrite file service :: uploadFile :: error ", error)
             return error;
         }
     }
@@ -34,7 +34,7 @@ export class FileService {
             )
             return true
         } catch (error) {
-            console.log("Appwrite file service :: deleteFile :: error ", error)
+            // console.log("Appwrite file service :: deleteFile :: error ", error)
             return false
         }
     }
@@ -46,7 +46,7 @@ export class FileService {
                 fileId,
             )
         } catch (error) {
-            console.log("Appwrite file service :: getFilePreview :: error ", error)
+            // console.log("Appwrite file service :: getFilePreview :: error ", error)
             return null;
         }
     }
@@ -59,7 +59,7 @@ export class FileService {
             )
             return true;
         } catch (error) {
-            console.log("Appwrite file service :: downloadFile :: error ", error)
+            // console.log("Appwrite file service :: downloadFile :: error ", error)
             return false
         }
     }

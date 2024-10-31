@@ -8,8 +8,11 @@ export default function Logo({
     const navigate = useNavigate()
 
     return (
-        <div onClick={() => { clickable ? navigate("/") : null }} className={`text-center text-3xl font-bold italic text-[#09350c] ${className} `}>
+        <div onClick={() => { clickable ? navigate("/") : null }} className={`text-center text-3xl font-bold italic text-[#09350c] font-mono ${className} `}>
             Post Palette
         </div>
+        // <div onClick={() => { clickable ? navigate("/") : null }} >
+        //     <img src="./logo.png" alt="logo" className={`h-[40px] ${className}`} />
+        // </div>
     )
 }

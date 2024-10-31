@@ -19,12 +19,18 @@ export default function Home() {
         })
     }, [])
 
-    if (loading) {
-        return <div>Loading...</div>
-    }
-
     if (!authStatus) {
         return <LandingPage />
+    }
+
+    if (loading) {
+        return <div className='w-full py-8'>
+            <Container>
+                <div className='flex flex-col gap-3 h-[60vh] flex-wrap justify-center items-center font-bold text-3xl'>
+                    Loading...
+                </div>
+            </Container>
+        </div>
     }
 
     if (posts.length === 0) {
@@ -50,7 +56,7 @@ export default function Home() {
         <div className='w-full py-8'>
             <Container>
                 <div className='flex flex-wrap'>
-                    <PostContainer posts={posts}/>
+                    <PostContainer posts={posts} />
                 </div>
             </Container>
         </div>

@@ -29,7 +29,7 @@ export default function PostForm({ post }) {
     const [slugError, setSlugError] = useState(null);
 
     const submitFn = async (data) => {
-        console.log("submission clicked")
+        // console.log("submission clicked")
 
         if(slugError) return
 
@@ -48,6 +48,7 @@ export default function PostForm({ post }) {
             })
 
             if (dbPost) {
+                alert("Post updated successfully")
                 navigate(`/post/${dbPost.$id}`)
             }
         } else {
@@ -59,20 +60,22 @@ export default function PostForm({ post }) {
                     featuredImage: file.$id,
                     userId: userData.$id
                 })
+                
+                if (res.$id) {
+                    alert("Post created successfully")
+                    navigate(`/post/${res.$id}`)
+                }
 
                 if (res.status !== 200) {
                     const errMsg = res.errMsg;
-                    console.log(errMsg)
+                    // console.log(errMsg)
                     setError('root', {
                         message: errMsg,
                         type: 'manual'
                     })
-                } else {
-                    navigate(`/post/${res.$id}`)
                 }
-
             } else {
-                console.log("file is required")
+                alert("file is required")
             }
         }
         setLoadingSubmission(false)
@@ -117,7 +120,7 @@ export default function PostForm({ post }) {
                 const isExist = slugs.includes(currentSlug)
 
                 if (isExist) {
-                    console.log(`${currentSlug} is already taken`)
+                    // console.log(`${currentSlug} is already taken`)
 
                     setSlugError(`${currentSlug} is already taken`)
                 } else {

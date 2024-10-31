@@ -21,7 +21,7 @@ export default function Signup() {
             }
 
         } catch (error) {
-            console.log("Signup Component Error :: signupFn :: error ", error.message);
+            // console.log("Signup Component Error :: signupFn :: error ", error.message);
             setError('root.serverError', {
                 message: error.message
             })

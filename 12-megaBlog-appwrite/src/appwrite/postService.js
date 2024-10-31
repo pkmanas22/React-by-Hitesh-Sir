@@ -29,7 +29,7 @@ export class PostService {
                 }
             )
         } catch (error) {
-            console.log("Appwrite post service :: createPost :: error ", error)
+            // console.log("Appwrite post service :: createPost :: error ", error)
             return {
                 status: 500,
                 errMsg: error.message
@@ -51,7 +51,7 @@ export class PostService {
                 }
             )
         } catch (error) {
-            console.log("Appwrite post service :: updatePost :: error ", error)
+            // console.log("Appwrite post service :: updatePost :: error ", error)
             return error;
         }
     }
@@ -65,7 +65,7 @@ export class PostService {
             )
             return true;
         } catch (error) {
-            console.log("Appwrite post service :: deletePost :: error ", error);
+            // console.log("Appwrite post service :: deletePost :: error ", error);
             return false;
         }
     }
@@ -78,35 +78,35 @@ export class PostService {
                 slug,
             )
         } catch (error) {
-            console.log("Appwrite post service :: getPost :: error ", error)
+            // console.log("Appwrite post service :: getPost :: error ", error)
             return error
         }
     }
 
     async getAllPosts() {
         try {
-            const queries = [Query.equal("status", "Active")]
+            const queries = [Query.equal("status", "Active"), Query.orderDesc('$updatedAt')]
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 queries
             )
         } catch (error) {
-            console.log("Appwrite post service :: getAllPosts :: error ", error)
+            // console.log("Appwrite post service :: getAllPosts :: error ", error)
             return error
         }
     }
 
     async getMyPosts(userId) {
         try {
-            const queries = [Query.equal('userId', userId)]
+            const queries = [Query.equal('userId', userId), Query.orderDesc('$updatedAt')]
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
                 queries
             )
         } catch (error) {
-            console.log("Appwrite post service :: getMyPosts :: error ", error)
+            // console.log("Appwrite post service :: getMyPosts :: error ", error)
             return error
         }
     }
@@ -122,7 +122,7 @@ export class PostService {
 
             return allSlugs;
         } catch (error) {
-            console.log("Appwrite post service :: generateAllSlugs :: error ", error)
+            // console.log("Appwrite post service :: generateAllSlugs :: error ", error)
             return error
         }
     }
